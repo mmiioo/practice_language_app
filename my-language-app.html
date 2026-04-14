@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>私の自己紹介 — My Intro Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper: #141418;
+  --paper2: #1c1c24;
+  --ink: #e8e4dc;
+  --ink2: #b8b4ac;
+  --muted: #b0b0c0;
+  --rule: #2a2a38;
+  --red: #c47a7a;
+  --blue: #6a9abf;
+  --green: #3a6048;
+  --gold: #b8924a;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  min-height: 100vh;
+}
+
+/* Notebook lines background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 31px,
+    var(--rule) 31px,
+    var(--rule) 32px
+  );
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Red margin line */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; bottom: 0;
+  left: 72px;
+  width: 1px;
+  background: rgba(192,57,43,0.25);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 2rem 2rem 5.5rem;
+}
+
+/* Header */
+header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.header-top {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+h1 em {
+  font-style: italic;
+  color: var(--blue);
+}
+
+.header-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 0.3rem;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.5rem 1.2rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.tab:hover { color: var(--ink); }
+.tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* Views */
+.view { display: none; }
+.view.active { display: block; }
+
+/* Topic list */
+.topic-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.topic-row:hover { background: rgba(0,0,0,0.02); margin: 0 -1rem; padding-left: 1rem; padding-right: 1rem; }
+
+.topic-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  min-width: 28px;
+  padding-top: 0.2rem;
+}
+
+.topic-content { flex: 1; }
+
+.topic-q {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.topic-status-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+.badge-done { background: rgba(122,201,154,0.15); color: var(--green); }
+.badge-empty { background: rgba(255,255,255,0.06); color: #c0c0d0; }
+
+.topic-arrow {
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding-top: 0.2rem;
+}
+
+/* Edit view */
+.edit-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  padding: 0;
+}
+.back-btn:hover { color: var(--blue); }
+
+.edit-q-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.edit-question {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.input-group {
+  margin-bottom: 1.2rem;
+}
+
+.input-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+.label-ja { color: var(--ink2); }
+.label-en { color: var(--blue); }
+.label-fr { color: var(--green); }
+
+textarea {
+  width: 100%;
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  padding: 0.7rem 0.9rem;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+  min-height: 160px;
+}
+textarea:focus { border-color: var(--blue); }
+textarea::placeholder { color: var(--muted); font-size: 0.85rem; }
+textarea[readonly] {
+  background: var(--paper2);
+  color: var(--ink2);
+}
+
+.translate-btn {
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  margin-bottom: 1.2rem;
+}
+.translate-btn:hover { opacity: 0.85; }
+.translate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.save-btn {
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 0.6rem 1.4rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  margin-left: 0.5rem;
+}
+.save-btn:hover { opacity: 0.75; }
+
+.status-msg {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--green);
+  margin-top: 0.5rem;
+  min-height: 1.2em;
+  letter-spacing: 0.05em;
+}
+
+/* Listen view */
+.listen-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.listen-nav select {
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  padding: 0.4rem 0.8rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--ink);
+  outline: none;
+  cursor: pointer;
+}
+
+.listen-counter {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+/* Listen card */
+.listen-card {
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  box-shadow: 2px 3px 0 var(--rule);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.listen-q {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed var(--rule);
+}
+
+.lang-block {
+  margin-bottom: 1.2rem;
+}
+
+.lang-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.lang-flag {
+  font-size: 1rem;
+}
+
+.lang-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.lang-name.ja { color: var(--ink2); }
+.lang-name.en { color: var(--blue); }
+.lang-name.fr { color: var(--green); }
+
+.lang-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  padding: 0.5rem 0;
+}
+.lang-text.en { color: var(--blue); }
+.lang-text.fr { color: var(--green); }
+
+/* Audio controls */
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.play-btn {
+  background: none;
+  border: 1px solid var(--rule);
+  padding: 0.25rem 0.7rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.05em;
+  color: var(--ink2);
+}
+.play-btn:hover { border-color: var(--ink); }
+.play-btn.playing { background: var(--ink); color: white; border-color: var(--ink); }
+
+.speed-btn {
+  background: none;
+  border: 1px solid var(--rule);
+  padding: 0.25rem 0.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+.speed-btn.active { border-color: var(--gold); color: var(--gold); }
+
+/* Recording section */
+.record-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--rule);
+}
+
+.record-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.record-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.rec-btn {
+  background: none;
+  border: 2px solid var(--red);
+  color: var(--red);
+  padding: 0.4rem 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.rec-btn:hover { background: var(--red); color: white; }
+.rec-btn.recording { background: var(--red); color: white; animation: pulse 1s infinite; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.rec-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.my-audio {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.my-audio audio {
+  height: 28px;
+  flex: 1;
+  max-width: 240px;
+}
+
+.compare-hint {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+/* Navigation bottom */
+.card-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-arrow {
+  background: none;
+  border: 1px solid var(--rule);
+  padding: 0.5rem 1.2rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  cursor: pointer;
+  color: var(--ink2);
+  letter-spacing: 0.05em;
+  transition: all 0.15s;
+}
+.nav-arrow:hover { border-color: var(--ink); }
+.nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* Progress dots */
+.progress-dots {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  max-width: 300px;
+  justify-content: center;
+}
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--rule);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.dot.current { background: var(--blue); }
+.dot.done { background: var(--green); }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--muted);
+}
+.empty-state p { font-size: 0.9rem; line-height: 1.7; }
+.empty-state .big { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.3; }
+
+/* SR badges on list */
+.sr-next {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+/* Spaced repetition controls in listen */
+.sr-section {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.sr-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+.sr-btn {
+  background: none;
+  border: 1px solid var(--rule);
+  padding: 0.25rem 0.7rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.sr-btn-1 { color: var(--red); border-color: rgba(192,57,43,0.3); }
+.sr-btn-1:hover { background: rgba(192,57,43,0.08); }
+.sr-btn-3 { color: var(--gold); border-color: rgba(139,105,20,0.3); }
+.sr-btn-3:hover { background: rgba(139,105,20,0.08); }
+.sr-btn-7 { color: var(--green); border-color: rgba(45,106,79,0.3); }
+.sr-btn-7:hover { background: rgba(45,106,79,0.08); }
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.fade-slide { animation: fadeSlide 0.25s ease; }
+
+/* Add topic bar */
+.add-topic-bar {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.btn-add {
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 0.5rem 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-add:hover { opacity: 0.75; }
+
+.btn-generate {
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-generate:hover { opacity: 0.85; }
+.btn-generate:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,24,20,0.55);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  padding: 1.8rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
+  animation: fadeSlide 0.2s ease;
+}
+
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.modal input[type="text"] {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 0.6rem 0.8rem;
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+  outline: none;
+  margin-bottom: 0.8rem;
+}
+.modal input:focus { border-color: var(--blue); }
+
+.category-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.chip {
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  padding: 0.3rem 0.7rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.05em;
+}
+.chip:hover { border-color: var(--blue); color: var(--blue); }
+.chip.selected { background: var(--blue); color: white; border-color: var(--blue); }
+
+.modal-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.btn-modal-ok {
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 0.5rem 1.2rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+}
+.btn-modal-cancel {
+  background: none;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  padding: 0.5rem 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  cursor: pointer;
+}
+
+.generated-topics {
+  margin-top: 0.8rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.gen-topic-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.88rem;
+}
+.gen-topic-item:last-child { border-bottom: none; }
+.gen-topic-item input[type="checkbox"] { accent-color: var(--blue); width: 15px; height: 15px; flex-shrink: 0; }
+
+.modal-status {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--green);
+  margin-top: 0.5rem;
+  min-height: 1.2em;
+}
+
+/* Delete button on topic row */
+.topic-delete {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.topic-row:hover .topic-delete { opacity: 1; }
+.topic-delete:hover { color: var(--red); }
+
+/* Custom topic badge */
+.badge-custom {
+  background: rgba(212,168,75,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(212,168,75,0.3);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.5rem;
+  padding: 0.1rem 0.3rem;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="header-top">
+      <h1>私の自己紹介 <em>Studio</em></h1>
+    </div>
+    <div class="header-sub">Personal · Japanese → English → Français</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('list')">📋 トピック一覧</button>
+    <button class="tab" onclick="switchTab('listen')">🎧 リスニング練習</button>
+  </div>
+
+  <!-- LIST VIEW -->
+  <div id="view-list" class="view active">
+    <div class="add-topic-bar">
+      <button class="btn-add" onclick="openAddModal()">＋ トピックを追加</button>
+      <button class="btn-generate" id="gen-btn" onclick="openGenerateModal()">✨ Claudeに生成してもらう</button>
+    </div>
+    <div id="topic-list"></div>
+  </div>
+
+  <!-- EDIT VIEW (inside list tab) -->
+  <div id="view-edit" class="view">
+    <div class="edit-header">
+      <button class="back-btn" onclick="showList()">← 一覧に戻る</button>
+    </div>
+    <div class="edit-q-label">質問 / Question</div>
+    <div class="edit-question" id="edit-q-text"></div>
+
+    <div class="input-group">
+      <label class="input-label label-ja">🇯🇵 あなたの回答（日本語）</label>
+      <textarea id="inp-ja" rows="3" placeholder="日本語で自由に書いてください。Claudeが自然な文章に整えます。"></textarea>
+    </div>
+
+    <button class="translate-btn" id="translate-btn" onclick="translateAll()">✨ Claude に整えて翻訳してもらう</button>
+
+    <div id="translated-section" style="display:none">
+      <div class="input-group">
+        <label class="input-label label-ja">🇯🇵 整えた日本語</label>
+        <textarea id="inp-ja-refined" rows="3" readonly></textarea>
+      </div>
+      <div class="input-group">
+        <label class="input-label label-en">🇺🇸 English</label>
+        <textarea id="inp-en" rows="3" readonly></textarea>
+      </div>
+      <div class="input-group">
+        <label class="input-label label-fr">🇫🇷 Français</label>
+        <textarea id="inp-fr" rows="3" readonly></textarea>
+      </div>
+      <div>
+        <button class="save-btn" onclick="saveEntry()">💾 保存する</button>
+      </div>
+    </div>
+
+    <div class="status-msg" id="edit-status"></div>
+  </div>
+
+  <!-- LISTEN VIEW -->
+  <div id="view-listen" class="view">
+    <div id="listen-empty" class="empty-state" style="display:none">
+      <div class="big">🎧</div>
+      <p>まだ回答が保存されていません。<br>「トピック一覧」から回答を入力してください。</p>
+    </div>
+    <div id="listen-content">
+      <div class="listen-nav">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--muted)">トピック選択</span>
+        <select id="listen-select" onchange="loadListenCard(parseInt(this.value))"></select>
+        <span class="listen-counter" id="listen-counter"></span>
+      </div>
+
+      <div class="listen-card fade-slide" id="listen-card">
+        <div class="listen-q" id="listen-q"></div>
+
+        <div class="lang-block">
+          <div class="lang-header">
+            <span class="lang-flag">🇯🇵</span>
+            <span class="lang-name ja">日本語</span>
+          </div>
+          <div class="lang-text" id="lt-ja"></div>
+          <div class="audio-controls">
+            <button class="play-btn" id="pb-ja" onclick="playLang('ja')">▶ 聞く</button>
+            <button class="speed-btn" id="sp-ja-slow" onclick="setSpeed('ja',0.7,this)">0.7×</button>
+            <button class="speed-btn active" id="sp-ja-norm" onclick="setSpeed('ja',1.0,this)">1.0×</button>
+            <button class="speed-btn" id="sp-ja-rep" onclick="toggleRepeat('ja',this)">🔁</button>
+          </div>
+        </div>
+
+        <div class="lang-block">
+          <div class="lang-header">
+            <span class="lang-flag">🇺🇸</span>
+            <span class="lang-name en">English</span>
+          </div>
+          <div class="lang-text en" id="lt-en"></div>
+          <div class="audio-controls">
+            <button class="play-btn" id="pb-en" onclick="playLang('en')">▶ Listen</button>
+            <button class="speed-btn" id="sp-en-slow" onclick="setSpeed('en',0.7,this)">0.7×</button>
+            <button class="speed-btn active" id="sp-en-norm" onclick="setSpeed('en',1.0,this)">1.0×</button>
+            <button class="speed-btn" id="sp-en-rep" onclick="toggleRepeat('en',this)">🔁</button>
+          </div>
+        </div>
+
+        <div class="lang-block">
+          <div class="lang-header">
+            <span class="lang-flag">🇫🇷</span>
+            <span class="lang-name fr">Français</span>
+          </div>
+          <div class="lang-text fr" id="lt-fr"></div>
+          <div class="audio-controls">
+            <button class="play-btn" id="pb-fr" onclick="playLang('fr')">▶ Écouter</button>
+            <button class="speed-btn" id="sp-fr-slow" onclick="setSpeed('fr',0.7,this)">0.7×</button>
+            <button class="speed-btn active" id="sp-fr-norm" onclick="setSpeed('fr',1.0,this)">1.0×</button>
+            <button class="speed-btn" id="sp-fr-rep" onclick="toggleRepeat('fr',this)">🔁</button>
+          </div>
+        </div>
+
+        <!-- Recording -->
+        <div class="record-section">
+          <div class="record-label">🎙 自分の声を録音して比較</div>
+          <div class="record-controls">
+            <button class="rec-btn" id="rec-btn" onclick="toggleRecord()">
+              <span class="rec-dot"></span>
+              <span id="rec-label">録音開始</span>
+            </button>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted)" id="rec-timer"></span>
+          </div>
+          <div class="my-audio" id="my-audio-wrap" style="display:none">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted)">あなたの声:</span>
+            <audio id="my-audio" controls></audio>
+          </div>
+          <div class="compare-hint">↑ ネイティブ音声と交互に聞いて比較してみましょう</div>
+        </div>
+
+        <!-- Spaced repetition -->
+        <div class="sr-section">
+          <span class="sr-label">次回の復習 →</span>
+          <button class="sr-btn sr-btn-1" onclick="setSR(1)">1日後</button>
+          <button class="sr-btn sr-btn-3" onclick="setSR(3)">3日後</button>
+          <button class="sr-btn sr-btn-7" onclick="setSR(7)">7日後</button>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--green)" id="sr-saved"></span>
+        </div>
+      </div>
+
+      <div class="card-nav">
+        <button class="nav-arrow" id="btn-prev" onclick="listenNav(-1)">← 前</button>
+        <div class="progress-dots" id="progress-dots"></div>
+        <button class="nav-arrow" id="btn-next" onclick="listenNav(1)">次 →</button>
+      </div>
+    </div>
+  </div>
+
+<!-- ADD TOPIC MODAL -->
+<div class="modal-overlay" id="modal-add">
+  <div class="modal">
+    <div class="modal-title">トピックを追加</div>
+    <input type="text" id="add-topic-input" placeholder="例：好きな季節はいつですか？" maxlength="80">
+    <div class="modal-status" id="add-status"></div>
+    <div class="modal-actions">
+      <button class="btn-modal-ok" onclick="confirmAddTopic()">追加する</button>
+      <button class="btn-modal-cancel" onclick="closeModal('modal-add')">キャンセル</button>
+    </div>
+  </div>
+</div>
+
+<!-- GENERATE TOPICS MODAL -->
+<div class="modal-overlay" id="modal-generate">
+  <div class="modal">
+    <div class="modal-title">✨ Claudeにトピックを生成してもらう</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);margin-bottom:0.6rem;">カテゴリを選択（複数OK）</div>
+    <div class="category-chips" id="category-chips">
+      <div class="chip selected" data-cat="自己紹介・基本">自己紹介・基本</div>
+      <div class="chip" data-cat="仕事・キャリア">仕事・キャリア</div>
+      <div class="chip" data-cat="趣味・余暇">趣味・余暇</div>
+      <div class="chip" data-cat="旅行・場所">旅行・場所</div>
+      <div class="chip" data-cat="食べ物・料理">食べ物・料理</div>
+      <div class="chip" data-cat="価値観・人生観">価値観・人生観</div>
+      <div class="chip" data-cat="日常生活">日常生活</div>
+      <div class="chip" data-cat="文化・エンタメ">文化・エンタメ</div>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);margin-bottom:0.4rem;">生成する数</div>
+    <div style="display:flex;gap:0.4rem;margin-bottom:0.8rem;">
+      <div class="chip selected" data-count="5" id="cnt-5">5問</div>
+      <div class="chip" data-count="10" id="cnt-10">10問</div>
+      <div class="chip" data-count="15" id="cnt-15">15問</div>
+    </div>
+    <button class="btn-generate" id="do-generate-btn" onclick="doGenerate()" style="width:100%;margin-bottom:0.8rem;">生成する</button>
+    <div class="generated-topics" id="generated-topics" style="display:none"></div>
+    <div class="modal-status" id="gen-status"></div>
+    <div class="modal-actions">
+      <button class="btn-modal-ok" id="add-selected-btn" onclick="addSelectedTopics()" style="display:none">選んだトピックを追加</button>
+      <button class="btn-modal-cancel" onclick="closeModal('modal-generate')">閉じる</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .app -->
+
+<script>
+// ===================== DATA =====================
+const DEFAULT_QUESTIONS = [
+  { id:1,  q:"お名前と出身地を教えてください。" },
+  { id:2,  q:"今、どんなお仕事をしていますか？" },
+  { id:3,  q:"趣味や好きなことを教えてください。" },
+  { id:4,  q:"家族構成を教えてください。" },
+  { id:5,  q:"語学を勉強している理由は何ですか？" },
+  { id:6,  q:"今住んでいる場所の好きなところは？" },
+  { id:7,  q:"最近ハマっていることはありますか？" },
+  { id:8,  q:"好きな食べ物は何ですか？" },
+  { id:9,  q:"学生時代は何を専攻していましたか？" },
+  { id:10, q:"将来の夢や目標を教えてください。" },
+  { id:11, q:"休日はどのように過ごしますか？" },
+  { id:12, q:"どんな音楽が好きですか？" },
+  { id:13, q:"今まで行った中で一番好きな場所はどこですか？" },
+  { id:14, q:"朝型ですか？夜型ですか？" },
+  { id:15, q:"スポーツや運動はしていますか？" },
+  { id:16, q:"どんな映画や本が好きですか？" },
+  { id:17, q:"ペットを飼っていますか？" },
+  { id:18, q:"料理はしますか？得意な料理はありますか？" },
+  { id:19, q:"SNSはよく使いますか？" },
+  { id:20, q:"自分の性格を一言で表すとしたら？" }
+];
+
+let customTopics = JSON.parse(localStorage.getItem('custom_topics') || '[]');
+function getAllQuestions() { return [...DEFAULT_QUESTIONS, ...customTopics]; }
+function saveCustomTopics() { localStorage.setItem('custom_topics', JSON.stringify(customTopics)); }
+function nextId() {
+  const all = getAllQuestions();
+  return all.length > 0 ? Math.max(...all.map(q => q.id)) + 1 : 100;
+}
+
+let answers = JSON.parse(localStorage.getItem('my_answers') || '{}');
+let srData  = JSON.parse(localStorage.getItem('my_sr') || '{}');
+
+function saveAnswers() { localStorage.setItem('my_answers', JSON.stringify(answers)); }
+function saveSR()      { localStorage.setItem('my_sr', JSON.stringify(srData)); }
+
+// ===================== TABS =====================
+let currentTab = 'list';
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach((b,i) => b.classList.toggle('active', ['list','listen'][i] === tab));
+  if (tab === 'list') showList();
+  if (tab === 'listen') showListen();
+}
+
+// ===================== LIST =====================
+let editingId = null;
+
+function showList() {
+  document.getElementById('view-list').classList.add('active');
+  document.getElementById('view-edit').classList.remove('active');
+  document.getElementById('view-listen').classList.remove('active');
+  renderList();
+}
+
+function renderList() {
+  const container = document.getElementById('topic-list');
+  const QUESTIONS = getAllQuestions();
+  container.innerHTML = QUESTIONS.map(q => {
+    const ans = answers[q.id];
+    const sr  = srData[q.id];
+    const hasDone = ans && ans.ja_refined;
+    const isCustom = customTopics.some(c => c.id === q.id);
+    const nextStr = sr && sr.nextReview ? `次回: ${formatDate(sr.nextReview)}` : '';
+    return `<div class="topic-row" onclick="openEdit(${q.id})">
+      <div class="topic-num">${String(q.id).padStart(2,'0')}</div>
+      <div class="topic-content">
+        <div class="topic-q">${q.q}
+          <span class="topic-status-badge ${hasDone ? 'badge-done' : 'badge-empty'}">${hasDone ? '✓ 入力済み' : '未入力'}</span>
+          ${isCustom ? '<span class="badge-custom">追加</span>' : ''}
+        </div>
+        ${nextStr ? `<div class="sr-next">${nextStr}</div>` : ''}
+      </div>
+      ${isCustom ? `<button class="topic-delete" onclick="deleteTopic(event,${q.id})">✕</button>` : ''}
+      <div class="topic-arrow">›</div>
+    </div>`;
+  }).join('');
+}
+
+function openEdit(id) {
+  editingId = id;
+  const q   = getAllQuestions().find(x => x.id === id);
+  const ans = answers[id] || {};
+
+  document.getElementById('view-list').classList.remove('active');
+  document.getElementById('view-edit').classList.add('active');
+
+  document.getElementById('edit-q-text').textContent = q.q;
+  document.getElementById('inp-ja').value = ans.ja_raw || '';
+  document.getElementById('inp-ja-refined').value = ans.ja_refined || '';
+  document.getElementById('inp-en').value = ans.en || '';
+  document.getElementById('inp-fr').value = ans.fr || '';
+  document.getElementById('edit-status').textContent = '';
+  document.getElementById('translated-section').style.display = ans.ja_refined ? 'block' : 'none';
+}
+
+// ===================== CLAUDE API =====================
+async function translateAll() {
+  const jaRaw = document.getElementById('inp-ja').value.trim();
+  if (!jaRaw) { document.getElementById('edit-status').textContent = '日本語の回答を入力してください。'; return; }
+
+  const btn = document.getElementById('translate-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Claudeが処理中...';
+  document.getElementById('edit-status').textContent = '';
+
+  const q = getAllQuestions().find(x => x.id === editingId);
+
+  try {
+    let res;
+    try {
+      res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{
+            role: 'user',
+            content: `あなたは語学学習アシスタントです。以下の質問に対する日本語の回答を、自然な日本語に整えた上で、英語とフランス語（中級レベル、自然な日常会話）に翻訳してください。
+
+質問: ${q.q}
+ユーザーの回答（日本語）: ${jaRaw}
+
+必ずJSONのみで返答してください。マークダウンや説明文は一切不要です：
+{"ja_refined":"整えた日本語","en":"English translation","fr":"Traduction française"}`
+          }]
+        })
+      });
+    } catch(fetchErr) {
+      document.getElementById('edit-status').textContent = `⚠ 通信エラー: ${fetchErr.message}`;
+      return;
+    }
+
+    let data;
+    try {
+      data = await res.json();
+    } catch(jsonErr) {
+      const text = await res.text().catch(() => '(取得不可)');
+      document.getElementById('edit-status').textContent = `⚠ レスポンス解析エラー。ステータス:${res.status} 内容:「${text.substring(0,120)}」`;
+      return;
+    }
+
+    if (data.error) {
+      document.getElementById('edit-status').textContent = `⚠ APIエラー: ${data.error.type} / ${data.error.message}`;
+      return;
+    }
+
+    if (!data.content || data.content.length === 0) {
+      document.getElementById('edit-status').textContent = `⚠ レスポンスが空。stop_reason: ${data.stop_reason}`;
+      return;
+    }
+
+    const raw = data.content.map(c => c.text || '').join('');
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      document.getElementById('edit-status').textContent = `⚠ JSON取得失敗。内容:「${raw.substring(0,120)}」`;
+      return;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(jsonMatch[0]);
+    } catch(je) {
+      document.getElementById('edit-status').textContent = `⚠ JSONパース失敗: ${je.message}`;
+      return;
+    }
+
+    document.getElementById('inp-ja-refined').value = parsed.ja_refined || '';
+    document.getElementById('inp-en').value = parsed.en || '';
+    document.getElementById('inp-fr').value = parsed.fr || '';
+    document.getElementById('translated-section').style.display = 'block';
+    document.getElementById('edit-status').textContent = '✓ 翻訳完了！確認して保存してください。';
+
+  } catch(e) {
+    document.getElementById('edit-status').textContent = `⚠ エラー: ${e.message}`;
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✨ Claude に整えて翻訳してもらう';
+  }
+}
+
+function saveEntry() {
+  const jaRefined = document.getElementById('inp-ja-refined').value.trim();
+  const en = document.getElementById('inp-en').value.trim();
+  const fr = document.getElementById('inp-fr').value.trim();
+  if (!jaRefined) { document.getElementById('edit-status').textContent = '翻訳を先に実行してください。'; return; }
+
+  answers[editingId] = {
+    ja_raw: document.getElementById('inp-ja').value.trim(),
+    ja_refined: jaRefined,
+    en, fr,
+    saved_at: new Date().toISOString()
+  };
+  saveAnswers();
+  document.getElementById('edit-status').textContent = '💾 保存しました！';
+  setTimeout(() => showList(), 800);
+}
+
+// ===================== LISTEN =====================
+let listenIndex = 0;
+let speeds = { ja: 1.0, en: 1.0, fr: 1.0 };
+let repeats = { ja: false, en: false, fr: false };
+let currentUtterance = null;
+
+function getFilledTopics() {
+  return getAllQuestions().filter(q => answers[q.id] && answers[q.id].ja_refined);
+}
+
+function showListen() {
+  document.getElementById('view-list').classList.remove('active');
+  document.getElementById('view-edit').classList.remove('active');
+  document.getElementById('view-listen').classList.add('active');
+
+  const filled = getFilledTopics();
+  if (filled.length === 0) {
+    document.getElementById('listen-empty').style.display = 'block';
+    document.getElementById('listen-content').style.display = 'none';
+    return;
+  }
+  document.getElementById('listen-empty').style.display = 'none';
+  document.getElementById('listen-content').style.display = 'block';
+
+  // populate select
+  const sel = document.getElementById('listen-select');
+  sel.innerHTML = filled.map((q,i) => `<option value="${i}">${String(q.id).padStart(2,'0')}. ${q.q.substring(0,20)}…</option>`).join('');
+
+  buildDots(filled.length);
+  loadListenCard(listenIndex < filled.length ? listenIndex : 0);
+}
+
+function buildDots(n) {
+  document.getElementById('progress-dots').innerHTML = Array.from({length:n},(_,i) =>
+    `<div class="dot" id="dot-${i}" onclick="loadListenCard(${i})"></div>`
+  ).join('');
+}
+
+function loadListenCard(idx) {
+  stopSpeech();
+  const filled = getFilledTopics();
+  if (idx < 0 || idx >= filled.length) return;
+  listenIndex = idx;
+
+  document.getElementById('listen-select').value = idx;
+
+  const q   = filled[idx];
+  const ans = answers[q.id];
+
+  document.getElementById('listen-q').textContent = q.q;
+  document.getElementById('lt-ja').textContent = ans.ja_refined;
+  document.getElementById('lt-en').textContent = ans.en;
+  document.getElementById('lt-fr').textContent = ans.fr;
+  document.getElementById('sr-saved').textContent = srData[q.id]?.nextReview
+    ? `次回: ${formatDate(srData[q.id].nextReview)}`
+    : '';
+
+  // reset recording
+  document.getElementById('my-audio-wrap').style.display = 'none';
+  document.getElementById('rec-btn').classList.remove('recording');
+  document.getElementById('rec-label').textContent = '録音開始';
+  document.getElementById('rec-timer').textContent = '';
+
+  // update nav
+  document.getElementById('btn-prev').disabled = idx === 0;
+  document.getElementById('btn-next').disabled = idx === filled.length - 1;
+  document.getElementById('listen-counter').textContent = `${idx+1} / ${filled.length}`;
+
+  // dots
+  document.querySelectorAll('.dot').forEach((d,i) => {
+    d.classList.toggle('current', i === idx);
+    const tid = filled[i]?.id;
+    d.classList.toggle('done', !!(srData[tid]?.nextReview));
+  });
+
+  document.getElementById('listen-card').classList.remove('fade-slide');
+  void document.getElementById('listen-card').offsetWidth;
+  document.getElementById('listen-card').classList.add('fade-slide');
+}
+
+function listenNav(dir) {
+  loadListenCard(listenIndex + dir);
+}
+
+// ---- TTS ----
+function stopSpeech() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  ['ja','en','fr'].forEach(l => document.getElementById(`pb-${l}`)?.classList.remove('playing'));
+}
+
+function playLang(lang) {
+  const texts = {
+    ja: document.getElementById('lt-ja').textContent,
+    en: document.getElementById('lt-en').textContent,
+    fr: document.getElementById('lt-fr').textContent
+  };
+  const locales = { ja:'ja-JP', en:'en-US', fr:'fr-FR' };
+
+  stopSpeech();
+  if (!window.speechSynthesis) { alert('このブラウザは音声非対応です。Chrome/Safariをお試しください。'); return; }
+
+  const u = new SpeechSynthesisUtterance(texts[lang]);
+  u.lang  = locales[lang];
+  u.rate  = speeds[lang];
+
+  const btn = document.getElementById(`pb-${lang}`);
+  btn.classList.add('playing');
+  btn.textContent = '■ 停止';
+
+  u.onend = () => {
+    btn.classList.remove('playing');
+    btn.textContent = lang === 'ja' ? '▶ 聞く' : lang === 'en' ? '▶ Listen' : '▶ Écouter';
+    if (repeats[lang]) setTimeout(() => playLang(lang), 600);
+  };
+  window.speechSynthesis.speak(u);
+}
+
+function setSpeed(lang, speed, el) {
+  speeds[lang] = speed;
+  el.closest('.audio-controls').querySelectorAll('.speed-btn:not(:last-child)').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleRepeat(lang, el) {
+  repeats[lang] = !repeats[lang];
+  el.classList.toggle('active', repeats[lang]);
+}
+
+// ---- Recording ----
+let mediaRecorder = null;
+let recordedChunks = [];
+let recTimerInterval = null;
+let recSeconds = 0;
+
+async function toggleRecord() {
+  const btn = document.getElementById('rec-btn');
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+    // stop
+    mediaRecorder.stop();
+    clearInterval(recTimerInterval);
+    btn.classList.remove('recording');
+    document.getElementById('rec-label').textContent = '録音開始';
+    document.getElementById('rec-timer').textContent = '';
+  } else {
+    // start
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      recordedChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+        const url  = URL.createObjectURL(blob);
+        const audio = document.getElementById('my-audio');
+        audio.src  = url;
+        document.getElementById('my-audio-wrap').style.display = 'flex';
+        stream.getTracks().forEach(t => t.stop());
+      };
+      mediaRecorder.start();
+      btn.classList.add('recording');
+      document.getElementById('rec-label').textContent = '■ 停止';
+      recSeconds = 0;
+      recTimerInterval = setInterval(() => {
+        recSeconds++;
+        const m = String(Math.floor(recSeconds/60)).padStart(2,'0');
+        const s = String(recSeconds%60).padStart(2,'0');
+        document.getElementById('rec-timer').textContent = `${m}:${s}`;
+      }, 1000);
+    } catch(e) {
+      alert('マイクへのアクセスを許可してください。');
+    }
+  }
+}
+
+// ---- Spaced Repetition ----
+function setSR(days) {
+  const filled = getFilledTopics();
+  const q = filled[listenIndex];
+  if (!q) return;
+  const next = new Date(Date.now() + days * 86400000);
+  srData[q.id] = { nextReview: next.toISOString(), days };
+  saveSR();
+  document.getElementById('sr-saved').textContent = `✓ 保存 → 次回: ${formatDate(next.toISOString())}`;
+  // update dot
+  document.querySelectorAll('.dot').forEach((d,i) => {
+    if (i === listenIndex) d.classList.add('done');
+  });
+}
+
+// ---- Helpers ----
+function formatDate(iso) {
+  const d = new Date(iso);
+  return `${d.getMonth()+1}/${d.getDate()}`;
+}
+
+// ===================== MODALS =====================
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// --- Add topic manually ---
+function openAddModal() {
+  document.getElementById('add-topic-input').value = '';
+  document.getElementById('add-status').textContent = '';
+  document.getElementById('modal-add').classList.add('open');
+  setTimeout(() => document.getElementById('add-topic-input').focus(), 100);
+}
+
+function confirmAddTopic() {
+  const val = document.getElementById('add-topic-input').value.trim();
+  if (!val) { document.getElementById('add-status').textContent = '質問を入力してください。'; return; }
+  const id = nextId();
+  customTopics.push({ id, q: val });
+  saveCustomTopics();
+  closeModal('modal-add');
+  renderList();
+}
+
+// --- Delete custom topic ---
+function deleteTopic(e, id) {
+  e.stopPropagation();
+  if (!confirm('このトピックを削除しますか？')) return;
+  customTopics = customTopics.filter(c => c.id !== id);
+  saveCustomTopics();
+  renderList();
+}
+
+// --- Generate topics via Claude ---
+let genCount = 5;
+let generatedList = [];
+
+function openGenerateModal() {
+  document.getElementById('generated-topics').style.display = 'none';
+  document.getElementById('gen-status').textContent = '';
+  document.getElementById('add-selected-btn').style.display = 'none';
+  generatedList = [];
+
+  // chip event listeners (category)
+  document.querySelectorAll('#category-chips .chip').forEach(chip => {
+    chip.onclick = () => chip.classList.toggle('selected');
+  });
+  // chip count
+  document.querySelectorAll('[data-count]').forEach(chip => {
+    chip.onclick = () => {
+      document.querySelectorAll('[data-count]').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+      genCount = parseInt(chip.dataset.count);
+    };
+  });
+
+  document.getElementById('modal-generate').classList.add('open');
+}
+
+async function doGenerate() {
+  const cats = [...document.querySelectorAll('#category-chips .chip.selected')].map(c => c.dataset.cat);
+  if (cats.length === 0) { document.getElementById('gen-status').textContent = 'カテゴリを1つ以上選んでください。'; return; }
+
+  const btn = document.getElementById('do-generate-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ 生成中...';
+  document.getElementById('gen-status').textContent = '';
+  document.getElementById('generated-topics').style.display = 'none';
+  document.getElementById('add-selected-btn').style.display = 'none';
+
+  const existing = getAllQuestions().map(q => q.q).join('\n');
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `自己紹介の会話練習用トピック（質問）を${genCount}個作ってください。
+カテゴリ: ${cats.join('、')}
+条件: 日常会話で自然に使える質問、日本語、以下の既存トピックと重複しないこと。
+
+既存トピック:
+${existing}
+
+必ずJSONのみで返答してください（配列形式）:
+["質問1","質問2","質問3",...]`
+        }]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content.map(c => c.text || '').join('');
+    const clean = raw.replace(/```json|```/g,'').trim();
+    generatedList = JSON.parse(clean);
+
+    document.getElementById('generated-topics').style.display = 'block';
+    document.getElementById('generated-topics').innerHTML = generatedList.map((q, i) => `
+      <div class="gen-topic-item">
+        <input type="checkbox" id="gen-${i}" checked>
+        <label for="gen-${i}" style="cursor:pointer;flex:1">${q}</label>
+      </div>`).join('');
+    document.getElementById('add-selected-btn').style.display = 'inline-block';
+    document.getElementById('gen-status').textContent = `✓ ${generatedList.length}件生成しました。追加するものを選んでください。`;
+  } catch(e) {
+    document.getElementById('gen-status').textContent = '⚠ エラーが発生しました。もう一度お試しください。';
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '生成する';
+  }
+}
+
+function addSelectedTopics() {
+  const checked = [...document.querySelectorAll('#generated-topics input[type="checkbox"]:checked')];
+  if (checked.length === 0) { document.getElementById('gen-status').textContent = 'トピックを選んでください。'; return; }
+  checked.forEach((cb, i) => {
+    const idx = parseInt(cb.id.replace('gen-',''));
+    customTopics.push({ id: nextId(), q: generatedList[idx] });
+  });
+  saveCustomTopics();
+  closeModal('modal-generate');
+  renderList();
+}
+
+// ===================== INIT =====================
+showList();
+</script>
+</body>
+</html>
